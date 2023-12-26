@@ -1,6 +1,8 @@
+/* eslint-disable */
 import {Text, View} from "react-native";
 import PlayerCalls from "./PlayerCalls";
 import PlayerCallsTop from "./PlayerCallsTop";
+import WaitingIndicator from "./WaitingIndicator";
 
 const LobbyPlayerList = ({game}) => {
     return (
@@ -29,9 +31,12 @@ const LobbyPlayerList = ({game}) => {
                         borderRadius: 5
                     }}>
                         <Text style={{ color: 'white', fontSize: 12, width: 70 }}>{game.Players[0].Name}</Text>
-                        <Text style={{ color: 'white', backgroundColor: 'red', width: 30, borderRadius: 5, height: 30, textAlign: 'center', textAlignVertical: 'center' }}>
-                            {game.Players[0].PenaltyPoints}
-                        </Text>
+                        <View style={{ flexDirection: 'column' }}>
+                            <Text style={{ color: 'white', backgroundColor: 'red', width: 30, borderRadius: 5, height: 30, textAlign: 'center', textAlignVertical: 'center' }}>
+                                {game.Players[0].PenaltyPoints}
+                            </Text>
+                            {game.Players[0].IsActive && <WaitingIndicator/>}
+                        </View>
                         <PlayerCalls player={game.Players[0]} />
                     </View>
                 )}
@@ -58,9 +63,12 @@ const LobbyPlayerList = ({game}) => {
                         borderRadius: 5
                     }}>
                         <Text style={{ color: 'white', fontSize: 12, width: 70 }}>{game.Players[1].Name}</Text>
-                        <Text style={{ color: 'white', backgroundColor: 'red', width: 30, borderRadius: 5, height: 30, textAlign: 'center', textAlignVertical: 'center' }}>
-                            {game.Players[1].PenaltyPoints}
-                        </Text>
+                        <View style={{ flexDirection: 'column' }}>
+                            <Text style={{ color: 'white', backgroundColor: 'red', width: 30, borderRadius: 5, height: 30, textAlign: 'center', textAlignVertical: 'center' }}>
+                                {game.Players[1].PenaltyPoints}
+                            </Text>
+                            {game.Players[1].IsActive && <WaitingIndicator/>}
+                        </View>
                         <PlayerCalls player={game.Players[1]} />
                     </View>
                 )}
@@ -87,9 +95,12 @@ const LobbyPlayerList = ({game}) => {
                         borderRadius: 5
                     }}>
                         <Text style={{ color: 'white', fontSize: 12, width: 70 }}>{game.Players[2].Name}</Text>
-                        <Text style={{ color: 'white', backgroundColor: 'red', width: 30, borderRadius: 5, height: 30, textAlign: 'center', textAlignVertical: 'center' }}>
-                            {game.Players[2].PenaltyPoints}
-                        </Text>
+                        <View style={{ flexDirection: 'column' }}>
+                            <Text style={{ color: 'white', backgroundColor: 'red', width: 30, borderRadius: 5, height: 30, textAlign: 'center', textAlignVertical: 'center' }}>
+                                {game.Players[2].PenaltyPoints}
+                            </Text>
+                            {game.Players[2].IsActive && <WaitingIndicator/>}
+                        </View>
                         <PlayerCalls player={game.Players[2]} />
                     </View>
                 )}
@@ -116,9 +127,12 @@ const LobbyPlayerList = ({game}) => {
                         borderRadius: 5
                     }}>
                         <Text style={{ color: 'white', fontSize: 12, width: 70 }}>{game.Players[3].Name}</Text>
+                        <View style={{ flexDirection: 'column' }}>
                         <Text style={{ color: 'white', backgroundColor: 'red', width: 30, borderRadius: 5, height: 30, textAlign: 'center', textAlignVertical: 'center' }}>
-                            {game.Players[3].PenaltyPoints}
-                        </Text>
+                                {game.Players[3].PenaltyPoints}
+                            </Text>
+                            {game.Players[3].IsActive && <WaitingIndicator/>}
+                        </View>
                         <PlayerCallsTop player={game.Players[3]} />
                     </View>
                 )}
@@ -145,9 +159,12 @@ const LobbyPlayerList = ({game}) => {
                         borderRadius: 5
                     }}>
                         <Text style={{ color: 'white', fontSize: 12, width: 70 }}>{game.Players[4].Name}</Text>
-                        <Text style={{ color: 'white', backgroundColor: 'red', width: 30, borderRadius: 5, height: 30, textAlign: 'center', textAlignVertical: 'center' }}>
-                            {game.Players[4].PenaltyPoints}
-                        </Text>
+                        <View style={{ flexDirection: 'column' }}>
+                            <Text style={{ color: 'white', backgroundColor: 'red', width: 30, borderRadius: 5, height: 30, textAlign: 'center', textAlignVertical: 'center' }}>
+                                {game.Players[4].PenaltyPoints}
+                            </Text>
+                            {game.Players[4].IsActive && <WaitingIndicator/>}
+                        </View>
                         <PlayerCalls player={game.Players[4]} />
                     </View>
                 )}
@@ -174,9 +191,12 @@ const LobbyPlayerList = ({game}) => {
                         borderRadius: 5
                     }}>
                         <Text style={{ color: 'white', fontSize: 12, width: 70 }}>{game.Players[5].Name}</Text>
-                        <Text style={{ color: 'white', backgroundColor: 'red', width: 30, borderRadius: 5, height: 30, textAlign: 'center', textAlignVertical: 'center' }}>
-                            {game.Players[5].PenaltyPoints}
-                        </Text>
+                        <View style={{ flexDirection: 'column' }}>
+                            <Text style={{ color: 'white', backgroundColor: 'red', width: 30, borderRadius: 5, height: 30, textAlign: 'center', textAlignVertical: 'center' }}>
+                                {game.Players[5].PenaltyPoints}
+                            </Text>
+                            {game.Players[5].IsActive && <WaitingIndicator/>}
+                        </View>
                         <PlayerCalls player={game.Players[5]} />
                     </View>
                 )}
