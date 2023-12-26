@@ -29,6 +29,7 @@ import Info from "./components/Info";
 import casinoBg from "./images/casino-bg.png"
 import GameLog from "./components/GameLog";
 import Settings from "./components/Settings";
+import {HUB_URL} from "@env";
 
 const Item = ({item}) => {
     return <View style={styles.item}>{item.icon}</View>;
@@ -91,7 +92,7 @@ export default function App() {
     const joinRoom = async (userName, roomCode) => {
         try {
             const connection = new HubConnectionBuilder()
-                .withUrl("https://toepenhub.jensramakers.nl/GameHub")
+                .withUrl(`${HUB_URL}`)
                 .configureLogging(LogLevel.Information)
                 .build();
 
