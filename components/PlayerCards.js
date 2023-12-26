@@ -88,25 +88,41 @@ const PlayerCards = ({game, setSelectedCard, selectedCard}) => {
         </View>
     );
 
+    const isBorderVisible = (player) => {
+        return game.StartedCard && game.StartedCard.Value === player.LastPlayedCard.Value && game.StartedCard.Suit === player.LastPlayedCard.Suit;
+    };
+
     return (
         <View style={{ zIndex: 30, ...(game && game.Players && game.Players[0] && game.Players[0].HasFolded ? { opacity: 0.5 } : {}) }}>
             <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center', height: 70}}>
                 {renderImages()}
             </View>
 
-            <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+            <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}}>
                 {game && game.Players[0] && game.Players[0].LastPlayedCard && (
-                    <Image
-                        style={{
+                    <View>
+                        <View style={{
                             position: 'absolute',
                             bottom: 90,
-                            zIndex: 50,
+                            zIndex: 55,
                             width: 50,
-                            height: 50,
-                        }}
-                        source={cardImages[`${game.Players[0].LastPlayedCard.Value}${game.Players[0].LastPlayedCard.Suit}`]}
-                        resizeMode="contain"
-                    />
+                            height: 0,
+                            borderColor: 'orange',
+                            borderWidth: isBorderVisible(game.Players[0]) ? 2 : 0,
+                            backgroundColor: 'orange',
+                        }}></View>
+                        <Image
+                            style={{
+                                position: 'absolute',
+                                bottom: 90,
+                                zIndex: 50,
+                                width: 50,
+                                height: 50,
+                            }}
+                            source={cardImages[`${game.Players[0].LastPlayedCard.Value}${game.Players[0].LastPlayedCard.Suit}`]}
+                            resizeMode="contain"
+                        />
+                    </View>
                 )}
             </View>
         </View>

@@ -16,7 +16,7 @@ const TypingIndicator = () => {
     }, []);
 
     return (
-        <Text style={{ fontSize: 27.5, marginTop: -22.5, marginBottom: -6, color: "white" }}>{dots}</Text>
+        <Text style={{ fontSize: 25, marginTop: -22.5, marginBottom: -6, color: "white" }}>{dots}</Text>
     );
 };
 
