@@ -2,6 +2,11 @@
 Also read the Backend README.md, its important to use reverse proxy for the backend
 
 ## Step 1: Configure the .env file
+try this if changes wont pick up correctly
+```bash
+npm start -- --reset-cache
+```
+
 ## Step 2: Start the Metro Server
 run this command in the root folder
 ```bash
