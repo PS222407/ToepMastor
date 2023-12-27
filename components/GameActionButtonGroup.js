@@ -34,7 +34,7 @@ const GameActionButtonGroup = ({game, selectedCard, fold, check, knock, callMove
                     (game.State === "PlayerKnocked" && game.Players[0].IsActive && game.Players[0].HasKnocked === false) ||
                     (game.State === "Poverty" && !game.Players[0].HasPoverty)
                 ) && (
-                    <TouchableOpacity style={styles.buttonRound} onPress={() => fold()}>
+                    <TouchableOpacity style={{...styles.buttonRound}} onPress={() => fold()}>
                         <Image
                             source={denyImage}
                             style={{ width: 40, height: 40 }}
@@ -48,7 +48,7 @@ const GameActionButtonGroup = ({game, selectedCard, fold, check, knock, callMove
                     (game.State === "PlayerKnocked" && game.Players[0].IsActive && game.Players[0].HasKnocked === false) ||
                     (game.State === "Poverty" && !game.Players[0].HasPoverty)
                 ) && (
-                    <TouchableOpacity style={styles.buttonRound} onPress={() => check()}>
+                    <TouchableOpacity style={{...styles.buttonRound}} onPress={() => check()}>
                         <Image
                             source={checkMarkImage}
                             style={{ width: 40, height: 40 }}
@@ -105,8 +105,8 @@ const GameActionButtonGroup = ({game, selectedCard, fold, check, knock, callMove
             }
 
             {
-                (game.Players[0].IsActive && selectedCard !== null && (
-                    <TouchableOpacity style={styles.buttonRound} onPress={() => playCard(selectedCard.suit, selectedCard.value).then(() => console.log("success"))}>
+                (game.Players[0].IsActive && selectedCard !== null && game.State !== 'PlayerKnocked' && (
+                    <TouchableOpacity style={{...styles.buttonRound}} onPress={() => playCard(selectedCard.suit, selectedCard.value).then(() => console.log("success"))}>
                         <Image
                             source={checkMarkImage}
                             style={{ width: 40, height: 40 }}
