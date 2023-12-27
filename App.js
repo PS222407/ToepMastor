@@ -48,16 +48,16 @@ export default function App() {
     const [connection, setConnection] = useState();
     const [messages, setMessages] = useState([]);
     const [game, setGame] = useState(null);
-    const [roomCode, SetRoomCode] = useState("");
+    const [roomCode, setRoomCode] = useState("");
     const [users, setUsers] = useState([]);
-    const [connectedUser, SetConnectedUser] = useState(null);
+    const [connectedUser, setConnectedUser] = useState(null);
     const [parsedTimerInfo, setParsedTimerInfo] = useState(null);
     const [hasJoinedRoom, setHasJoinedRoom] = useState(false);
     const [showModal, setShowModal] = useState(false);
     const [turnedCards, setTurnedCards] = useState([]);
     const [selectedCard, setSelectedCard] = useState(null);
     const [winModalVisible, setWinModalVisible] = useState(false);
-    const [hasWonSet, SetHasWonSet] = useState(false);
+    const [hasWonSet, setHasWonSet] = useState(false);
     const [gameLog, setGameLog] = useState([]);
 
     const showToast = (type, message) => {
@@ -114,7 +114,30 @@ export default function App() {
             await connection.invoke("JoinRoom", {userName, roomCode});
             setConnection(connection);
 
-            SetRoomCode(roomCode);
+            setRoomCode(roomCode);
+        } catch (e) {
+            setConnection(null);
+            console.log(e);
+        }
+    }
+
+    const hostRoom = async (userName, roomCode) => {
+        try {
+            const connection = new HubConnectionBuilder()
+                .withUrl(`${HUB_URL}`)
+                .configureLogging(LogLevel.Information)
+                .build();
+
+            connections(connection);
+
+            await connection.start().then(() => {
+                console.log("Connected to hub");
+            }).catch((error) => {
+                console.log("Connection hub Error: " + error);
+            });
+
+            await connection.invoke("HostRoom", {userName, roomCode});
+            setConnection(connection);
         } catch (e) {
             setConnection(null);
             console.log(e);
@@ -150,10 +173,10 @@ export default function App() {
             }
 
             if (parsedGame.State === "SetIsWonAndOver") {
-                SetHasWonSet(true);
+                setHasWonSet(true);
             }
             else{
-                SetHasWonSet(false);
+                setHasWonSet(false);
             }
 
             const gameViewModel = new GameViewModel(parsedGame);
@@ -170,16 +193,17 @@ export default function App() {
             setParsedTimerInfo(parsedInfo);
         });
 
-        connection.on("ReceiveUsersInRoom", (users) => {
+        connection.on("ReceiveUsersInRoom", (users, roomCode) => {
             const parsedUsers = JSON.parse(users);
             setUsers(parsedUsers);
+            setRoomCode(roomCode);
         });
 
         connection.on("ReceiveConnectedUser", (user) => {
             if (user != null){
                 console.log(JSON.stringify(JSON.parse(user), undefined, 4));
                 const parsedUser = JSON.parse(user);
-                SetConnectedUser(parsedUser);
+                setConnectedUser(parsedUser);
             }
             else{
                 connection.stop();
@@ -264,9 +288,9 @@ export default function App() {
         setConnection(null);
         setMessages([]);
         setGame(null);
-        SetRoomCode("");
+        setRoomCode("");
         setUsers([]);
-        SetConnectedUser(null);
+        setConnectedUser(null);
         setParsedTimerInfo(null);
         setHasJoinedRoom(false);
         setShowModal(false);
@@ -282,7 +306,7 @@ export default function App() {
     );
 
     const HostScreen = ({ navigation }) => (
-        <LobbyHost joinRoom={joinRoom} />
+        <LobbyHost hostRoom={hostRoom} />
     );
 
     const HomeScreen = ({ navigation }) => (
@@ -335,6 +359,7 @@ export default function App() {
                             <Stack.Navigator
                                 screenOptions={{
                                     detachPreviousScreen: true,
+                                    headerTitle: '',
                                     presentation: 'transparentModal',
                                     headerStyle: {
                                         backgroundColor: 'transparent',

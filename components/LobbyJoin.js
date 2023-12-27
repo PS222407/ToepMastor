@@ -6,25 +6,6 @@ const LobbyJoin = ({joinRoom}) => {
     const [user, setUser] = useState('');
     const [room, setRoom] = useState('');
 
-    const getRandomChar = () => {
-        const randomCharCode = Math.floor(Math.random() * 52);
-        const baseCharCode = randomCharCode < 26 ? 'A'.charCodeAt(0) : 'a'.charCodeAt(0);
-        return String.fromCharCode(baseCharCode + (randomCharCode % 26));
-    }
-
-    const generateRandomRoomCode = () => {
-        let randomString = '';
-        for (let i = 0; i < 5; i++) {
-            randomString += getRandomChar();
-        }
-        return randomString;
-    }
-
-    const hostRoom = () => {
-        const roomCode = generateRandomRoomCode();
-        joinRoom(user, roomCode);
-    }
-
     return (
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
             <View style={{ width: '30%', rowGap: 16}}>

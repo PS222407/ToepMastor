@@ -1,9 +1,13 @@
 /* eslint-disable */
-import React from 'react';
+import React, {useEffect} from 'react';
 import {View, Text, Image, FlatList, TouchableOpacity} from 'react-native';
 import hostImage from '../images/host.png';
 
 const WaitingRoom = ({ roomCode, users, startGame, connectedUser, removePlayer }) => {
+    useEffect(() => {
+        console.log(roomCode)
+    }, [roomCode]);
+
     const usersLobby = ({ item }) => (
         <View style={{ flex: 1, margin: 8, maxWidth: '30%' }}>
             <View style={{ backgroundColor: 'white', borderRadius: 10 }}>

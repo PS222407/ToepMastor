@@ -2,32 +2,9 @@
 import React, {useState} from 'react';
 import {Text, TextInput, TouchableOpacity, View} from 'react-native';
 
-const LobbyHost = ({joinRoom}) => {
+const LobbyHost = ({hostRoom}) => {
     const [user, setUser] = useState('');
     const [room, setRoom] = useState('');
-
-    const getRandomChar = () => {
-        const randomCharCode = Math.floor(Math.random() * 52);
-        const baseCharCode = randomCharCode < 26 ? 'A'.charCodeAt(0) : 'a'.charCodeAt(0);
-        return String.fromCharCode(baseCharCode + (randomCharCode % 26));
-    }
-
-    const generateRandomRoomCode = () => {
-        let randomString = '';
-        for (let i = 0; i < 5; i++) {
-            randomString += getRandomChar();
-        }
-        return randomString;
-    }
-
-    const hostRoom = () => {
-        if (room === ''){
-            const roomCode = generateRandomRoomCode();
-            joinRoom(user, roomCode);
-        }else{
-            joinRoom(user, room);
-        }
-    }
 
     return (
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
@@ -47,7 +24,7 @@ const LobbyHost = ({joinRoom}) => {
                 />
 
                 <View>
-                    <Text style={{ marginBottom: 5, }}>
+                    <Text style={{ marginBottom: 5, color: 'white' }}>
                         Optional *
                     </Text>
                     <TextInput

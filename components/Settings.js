@@ -19,7 +19,7 @@ const Settings = ({ leaveGame }) => {
     return (
         <View style={styles.container}>
             <TouchableOpacity style={{marginLeft: 20, marginTop: 20}} onPress={toggleSidebar}>
-                <Icon name="settings" size={30} color="white"/>
+                <Icon name="logout" size={30} color="white"/>
             </TouchableOpacity>
 
             <Modal
