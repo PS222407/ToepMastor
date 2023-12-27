@@ -311,7 +311,8 @@ export default function App() {
 
     const HomeScreen = ({ navigation }) => (
         <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-            <View style={{width: '30%', marginBottom: 20}}>
+            <Text style={{ color: 'white', fontSize: 50 }}>ToepMastor</Text>
+            <View style={{width: '30%', marginBottom: 20, marginTop: 40}}>
                 <TouchableOpacity
                     onPress={() => navigation.navigate('Lobby')}
                     style={{
