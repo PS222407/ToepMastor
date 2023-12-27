@@ -17,12 +17,23 @@ npm start
 Use android studio for example to start an emulator
 
 ## Step 4: Start your Application
-run this command in the root folder
 ### For Android
+run this command in the root folder (run command in git bash)
 ```bash
 npm run android
 ```
 ### For iOS
 ```bash
 npm run ios
+```
+
+# Release steps
+Build the release aab
+```bash
+npx react-native build-android --mode=release  
+```
+
+test the release aab (run command in git bash)
+```bash
+npm run android -- --mode="release"
 ```
