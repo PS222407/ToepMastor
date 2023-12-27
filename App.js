@@ -6,12 +6,15 @@ import {
     Image,
     ImageBackground,
     StatusBar,
+    TouchableOpacity,
     Pressable, Alert, Modal
 } from 'react-native';
 import tableImage from "./images/table.jpg"
 import backCard from "./images/somebackcard.png"
 import {useState} from "react";
 import Lobby from "./components/Lobby";
+import LobbyJoin from "./components/LobbyJoin";
+import LobbyHost from "./components/LobbyHost";
 import WaitingRoom from "./components/WaitingRoom";
 import GameViewModel from "./viewModels/GameViewModel";
 import {HubConnectionBuilder, LogLevel} from "@microsoft/signalr";
@@ -30,6 +33,10 @@ import casinoBg from "./images/casino-bg.png"
 import GameLog from "./components/GameLog";
 import Settings from "./components/Settings";
 import {HUB_URL} from "@env";
+import { DefaultTheme, NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+
+const Stack = createStackNavigator();
 
 const Item = ({item}) => {
     return <View style={styles.item}>{item.icon}</View>;
@@ -270,168 +277,233 @@ export default function App() {
         setOptions(true);
     }
 
+    const LobbyScreen = ({ navigation }) => (
+        <LobbyJoin joinRoom={joinRoom} />
+    );
+
+    const HostScreen = ({ navigation }) => (
+        <LobbyHost joinRoom={joinRoom} />
+    );
+
+    const HomeScreen = ({ navigation }) => (
+        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+            <View style={{width: '30%', marginBottom: 20}}>
+                <TouchableOpacity
+                    onPress={() => navigation.navigate('Lobby')}
+                    style={{
+                        backgroundColor: 'green',
+                        padding: 10,
+                        borderRadius: 4,
+                    }}
+                >
+                    <Text style={{color: 'white', textAlign: 'center'}}>Join Room</Text>
+                </TouchableOpacity>
+            </View>
+
+            <View style={{width: '30%'}}>
+                <TouchableOpacity
+                    onPress={() => navigation.navigate('Host')}
+                    style={{
+                        backgroundColor: 'transparent',
+                        borderWidth: 2,
+                        borderColor: 'green',
+                        padding: 10,
+                        borderRadius: 4,
+                    }}
+                >
+                    <Text style={{color: 'green', textAlign: 'center'}}>Host</Text>
+                </TouchableOpacity>
+            </View>
+        </View>
+    );
+
+    const navTheme = {
+      ...DefaultTheme,
+      colors: {
+        ...DefaultTheme.colors,
+        background: 'transparent',
+      },
+    };
+
     return (
         <View style={{height: '100%', width: '100%'}}>
             <StatusBar hidden />
             {!connection || !hasJoinedRoom
                 ?
-                <ImageBackground source={casinoBg} resizeMode="cover" style={styles.image}>
-                    <Lobby joinRoom={joinRoom} />
-                </ImageBackground>
+                    <ImageBackground source={casinoBg} resizeMode="cover" style={styles.image}>
+                        <NavigationContainer theme={navTheme}>
+                            <Stack.Navigator
+                                screenOptions={{
+                                    detachPreviousScreen: true,
+                                    presentation: 'transparentModal',
+                                    headerStyle: {
+                                        backgroundColor: 'transparent',
+                                        elevation: 0,
+                                    },
+                                    headerTintColor: 'white',
+                                    cardStyle: { backgroundColor: 'transparent' },
+                                    animationEnabled: false,
+                                }}>
+                                <Stack.Screen name="Home" component={HomeScreen} />
+                                <Stack.Screen name="Lobby" component={LobbyScreen} />
+                                <Stack.Screen name="Host" component={HostScreen} />
+                            </Stack.Navigator>
+                        </NavigationContainer>
+                    </ImageBackground>
                 :
 
                 !game ?
-                <ImageBackground source={casinoBg} resizeMode="cover" style={styles.image}>
-                    <WaitingRoom roomCode={roomCode} users={users} startGame={startGame} connectedUser={connectedUser} removePlayer={removePlayer}/>
-                    <View style={{ position: 'absolute', top: 0, height: !showOptions ? '100%' : 'auto', right: 20, zIndex: 50}}>
-                        <Settings leaveGame={leaveGame} />
-                    </View>
-                </ImageBackground>
-                :
-                <ImageBackground source={image} resizeMode="cover" style={styles.image}>
-                    <View>
-                        <Modal
-                            animationType="slide"
-                            transparent={true}
-                            visible={winModalVisible}
-                            onRequestClose={() => {
-                                Alert.alert('Modal has been closed.');
-                                setWinModalVisible(!winModalVisible);
-                            }}>
-                            <View style={{ flex: 1,
-                                justifyContent: 'center',
-                                alignItems: 'center',
-                                marginTop: 22 }}>
-                                <View style={{
-                                    backgroundColor: 'white',
-                                    borderRadius: 10,
-                                    paddingLeft: 35,
-                                    paddingRight: 35,
-                                    paddingTop: 20,
-                                    paddingBottom: 20,
+                    <ImageBackground source={casinoBg} resizeMode="cover" style={styles.image}>
+                        <WaitingRoom roomCode={roomCode} users={users} startGame={startGame} connectedUser={connectedUser} removePlayer={removePlayer}/>
+                        <View style={{ position: 'absolute', top: 0, height: !showOptions ? '100%' : 'auto', right: 20, zIndex: 50}}>
+                            <Settings leaveGame={leaveGame} />
+                        </View>
+                    </ImageBackground>
+                    :
+                    <ImageBackground source={image} resizeMode="cover" style={styles.image}>
+                        <View>
+                            <Modal
+                                animationType="slide"
+                                transparent={true}
+                                visible={winModalVisible}
+                                onRequestClose={() => {
+                                    Alert.alert('Modal has been closed.');
+                                    setWinModalVisible(!winModalVisible);
+                                }}>
+                                <View style={{ flex: 1,
+                                    justifyContent: 'center',
                                     alignItems: 'center',
-                                    shadowColor: 'blue',
-                                    shadowOffset: {
-                                        width: 0,
-                                        height: 2,
-                                    },
-                                    shadowOpacity: 0.25,
-                                    shadowRadius: 4,
-                                    elevation: 5,}}>
-                                    <Text style={{ fontSize: 18, color: 'black' }}>
-                                        {game.WinnerIdOfGame !== -1
-                                            ? `Game is over! Winner is ${game.Players.find((p) => p.Id === game.WinnerIdOfGame).Name}`
-                                            : 'Game is over! Winner information not available.'}
-                                    </Text>
-                                    <Pressable
-                                        style={{backgroundColor: 'blue',
-                                            borderRadius: 10,
-                                            padding: 10,
-                                            elevation: 2,
-                                            marginTop: 30,
+                                    marginTop: 22 }}>
+                                    <View style={{
+                                        backgroundColor: 'white',
+                                        borderRadius: 10,
+                                        paddingLeft: 35,
+                                        paddingRight: 35,
+                                        paddingTop: 20,
+                                        paddingBottom: 20,
+                                        alignItems: 'center',
+                                        shadowColor: 'blue',
+                                        shadowOffset: {
+                                            width: 0,
+                                            height: 2,
+                                        },
+                                        shadowOpacity: 0.25,
+                                        shadowRadius: 4,
+                                        elevation: 5,}}>
+                                        <Text style={{ fontSize: 18, color: 'black' }}>
+                                            {game.WinnerIdOfGame !== -1
+                                                ? `Game is over! Winner is ${game.Players.find((p) => p.Id === game.WinnerIdOfGame).Name}`
+                                                : 'Game is over! Winner information not available.'}
+                                        </Text>
+                                        <Pressable
+                                            style={{backgroundColor: 'blue',
+                                                borderRadius: 10,
+                                                padding: 10,
+                                                elevation: 2,
+                                                marginTop: 30,
                                             }}
-                                        onPress={() => {
-                                            leaveGame();
-                                        }}>
-                                        <Text style={{color: 'white', backgroundColor: 'blue'}}>Play Again</Text>
-                                    </Pressable>
+                                            onPress={() => {
+                                                leaveGame();
+                                            }}>
+                                            <Text style={{color: 'white', backgroundColor: 'blue'}}>Play Again</Text>
+                                        </Pressable>
+                                    </View>
                                 </View>
-                            </View>
-                        </Modal>
-                    </View>
-
-                    <View style={{ display: 'none' }}>
-                        {Object.keys(cardImages).map((cardName, index) => (
-                            <Image
-                                key={index}
-                                source={cardImages[cardName]}
-                                style={styles.cardImage}
-                            />
-                        ))}
-                    </View>
-
-                    <View style={{
-                        flex: 1,
-                        width: "auto",
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                    }}>
-                        <View style={styles.container}>
-                            <View style={styles.container}>
-                                <View style={styles.app}>
-                                    <FlatList
-                                        data={PlayerData({
-                                            game: game,
-                                            selectedCard: selectedCard,
-                                            setSelectedCard: setSelectedCard,
-                                            backCard: backCard,
-                                            cardImages: cardImages,
-                                        })}
-                                        numColumns={5}
-                                        renderItem={({item}) => <Item item={item} key={item.alt}/>}
-                                        keyExtractor={(item, index) => `${index}`}
-                                    />
-                                </View>
-
-                                <GameActionButtonGroup game={game} selectedCard={selectedCard} fold={fold} check={check} knock={knock} callMoveOnToNextSet={callMoveOnToNextSet} callDirtyLaundry={callDirtyLaundry} callWhiteLaundry={callWhiteLaundry} callNoLaundry={callNoLaundry} playCard={playCard} />
-                            </View>
+                            </Modal>
                         </View>
+
+                        <View style={{ display: 'none' }}>
+                            {Object.keys(cardImages).map((cardName, index) => (
+                                <Image
+                                    key={index}
+                                    source={cardImages[cardName]}
+                                    style={styles.cardImage}
+                                />
+                            ))}
+                        </View>
+
                         <View style={{
-                            position: 'absolute',
-                            top: 0,
-                            left: 0,
-                            right: 0,
+                            flex: 1,
+                            width: "auto",
+                            justifyContent: 'center',
+                            alignItems: 'center',
                         }}>
-                            <LobbyPlayerList game={game}/>
-                            <LaundryCallList game={game} turnLaundry={turnLaundry} />
-                        </View>
-                    </View>
+                            <View style={styles.container}>
+                                <View style={styles.container}>
+                                    <View style={styles.app}>
+                                        <FlatList
+                                            data={PlayerData({
+                                                game: game,
+                                                selectedCard: selectedCard,
+                                                setSelectedCard: setSelectedCard,
+                                                backCard: backCard,
+                                                cardImages: cardImages,
+                                            })}
+                                            numColumns={5}
+                                            renderItem={({item}) => <Item item={item} key={item.alt}/>}
+                                            keyExtractor={(item, index) => `${index}`}
+                                        />
+                                    </View>
 
-                    <View style={{ position: 'absolute', top: 0, height: !showOptions ? '100%' : 'auto', zIndex: 50}}>
-                        <Chat connection={connection} game={game} users={users} connectedUser={connectedUser} messages={messages} toggleView={toggleView} showOptions={showOptions} />
-                    </View>
-
-                    <View style={{ position: 'absolute', top: 0, height: !showOptions ? '100%' : 'auto', left: showOptions ? 50 : 0, zIndex: 50}}>
-                        <GameLog gameLog={gameLog} toggleView={toggleView} showOptions={showOptions} />
-                    </View>
-
-                    <View style={{ position: 'absolute', top: 0, height: !showOptions ? '100%' : 'auto', left: showOptions ? 100 : 0, zIndex: 50}}>
-                        <Info connection={connection} game={game} users={users} connectedUser={connectedUser} messages={messages} toggleView={toggleView} showOptions={showOptions} />
-                    </View>
-
-                    <View style={{ position: 'absolute', flex: 1, flexDirection: 'row',
-                        justifyContent: 'center', alignItems: 'center'}}>
-
-                        { hasWonSet && (
-                            <View style={{ flex: 1,
-                                justifyContent: 'center',
-                                alignItems: 'center'}}>
-                                <View style={{
-                                    backgroundColor: 'rgba(0, 0, 0, 0.7)',
-                                    width: '100%',
-                                    paddingTop: 20,
-                                    paddingBottom: 20,
-                                    alignItems: 'center'}}>
-                                    <Text style={{ fontSize: 18, color: 'white' }}>
-                                        {game.WinnerIdOfSet !== -1
-                                            ? `Round is over! Winner is ${game.Players.find((p) => p.Id === game.WinnerIdOfSet).Name}`
-                                            : 'Round is over! Winner information not available.'}
-                                    </Text>
+                                    <GameActionButtonGroup game={game} selectedCard={selectedCard} fold={fold} check={check} knock={knock} callMoveOnToNextSet={callMoveOnToNextSet} callDirtyLaundry={callDirtyLaundry} callWhiteLaundry={callWhiteLaundry} callNoLaundry={callNoLaundry} playCard={playCard} />
                                 </View>
                             </View>
-                        )}
-                    </View>
+                            <View style={{
+                                position: 'absolute',
+                                top: 0,
+                                left: 0,
+                                right: 0,
+                            }}>
+                                <LobbyPlayerList game={game}/>
+                                <LaundryCallList game={game} turnLaundry={turnLaundry} />
+                            </View>
+                        </View>
 
-                    <TurnedCardsModal isVisible={showModal} victimCards={turnedCards} onClose={closeModal} />
+                        <View style={{ position: 'absolute', top: 0, height: !showOptions ? '100%' : 'auto', zIndex: 50}}>
+                            <Chat connection={connection} game={game} users={users} connectedUser={connectedUser} messages={messages} toggleView={toggleView} showOptions={showOptions} />
+                        </View>
 
-                    <View style={{ position: 'absolute', top: 0, height: !showOptions ? '100%' : 'auto', right: 20, zIndex: 50}}>
-                        <Settings leaveGame={leaveGame} />
-                    </View>
+                        <View style={{ position: 'absolute', top: 0, height: !showOptions ? '100%' : 'auto', left: showOptions ? 50 : 0, zIndex: 50}}>
+                            <GameLog gameLog={gameLog} toggleView={toggleView} showOptions={showOptions} />
+                        </View>
 
-                    <Text style={{ position: 'absolute', top: 20, right: 60, color: 'white', fontSize: 25 }}>
-                        {parsedTimerInfo && parsedTimerInfo.Seconds > 0 && parsedTimerInfo.Seconds}
-                    </Text>
-                </ImageBackground>
+                        <View style={{ position: 'absolute', top: 0, height: !showOptions ? '100%' : 'auto', left: showOptions ? 100 : 0, zIndex: 50}}>
+                            <Info connection={connection} game={game} users={users} connectedUser={connectedUser} messages={messages} toggleView={toggleView} showOptions={showOptions} />
+                        </View>
+
+                        <View style={{ position: 'absolute', flex: 1, flexDirection: 'row',
+                            justifyContent: 'center', alignItems: 'center'}}>
+
+                            { hasWonSet && (
+                                <View style={{ flex: 1,
+                                    justifyContent: 'center',
+                                    alignItems: 'center'}}>
+                                    <View style={{
+                                        backgroundColor: 'rgba(0, 0, 0, 0.7)',
+                                        width: '100%',
+                                        paddingTop: 20,
+                                        paddingBottom: 20,
+                                        alignItems: 'center'}}>
+                                        <Text style={{ fontSize: 18, color: 'white' }}>
+                                            {game.WinnerIdOfSet !== -1
+                                                ? `Round is over! Winner is ${game.Players.find((p) => p.Id === game.WinnerIdOfSet).Name}`
+                                                : 'Round is over! Winner information not available.'}
+                                        </Text>
+                                    </View>
+                                </View>
+                            )}
+                        </View>
+
+                        <TurnedCardsModal isVisible={showModal} victimCards={turnedCards} onClose={closeModal} />
+
+                        <View style={{ position: 'absolute', top: 0, height: !showOptions ? '100%' : 'auto', right: 20, zIndex: 50}}>
+                            <Settings leaveGame={leaveGame} />
+                        </View>
+
+                        <Text style={{ position: 'absolute', top: 20, right: 60, color: 'white', fontSize: 25 }}>
+                            {parsedTimerInfo && parsedTimerInfo.Seconds > 0 && parsedTimerInfo.Seconds}
+                        </Text>
+                    </ImageBackground>
             }
             <Toast />
         </View>
