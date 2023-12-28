@@ -32,9 +32,9 @@ import Info from "./components/Info";
 import casinoBg from "./images/casino-bg.png"
 import GameLog from "./components/GameLog";
 import Settings from "./components/Settings";
-import {HUB_URL} from "@env";
 import { DefaultTheme, NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+import Env from "./Env";
 
 const Stack = createStackNavigator();
 
@@ -99,7 +99,7 @@ export default function App() {
     const joinRoom = async (userName, roomCode) => {
         try {
             const connection = new HubConnectionBuilder()
-                .withUrl(`${HUB_URL}`)
+                .withUrl(`${Env.HUB_URL}`)
                 .configureLogging(LogLevel.Information)
                 .build();
 
@@ -124,7 +124,7 @@ export default function App() {
     const hostRoom = async (userName, roomCode) => {
         try {
             const connection = new HubConnectionBuilder()
-                .withUrl(`${HUB_URL}`)
+                .withUrl(`${Env.HUB_URL}`)
                 .configureLogging(LogLevel.Information)
                 .build();
 
