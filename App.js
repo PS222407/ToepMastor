@@ -321,7 +321,7 @@ export default function App() {
                         borderRadius: 4,
                     }}
                 >
-                    <Text style={{color: 'white', textAlign: 'center'}}>Join Room</Text>
+                    <Text style={{color: 'white', textAlign: 'center'}}>Join Existing Lobby</Text>
                 </TouchableOpacity>
             </View>
 
@@ -336,7 +336,7 @@ export default function App() {
                         borderRadius: 4,
                     }}
                 >
-                    <Text style={{color: 'green', textAlign: 'center'}}>Host</Text>
+                    <Text style={{color: 'green', textAlign: 'center'}}>Host New Lobby</Text>
                 </TouchableOpacity>
             </View>
         </View>

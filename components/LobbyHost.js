@@ -25,7 +25,7 @@ const LobbyHost = ({hostRoom}) => {
 
                 <View>
                     <Text style={{ marginBottom: 5, color: 'white' }}>
-                        Optional *
+                        Leave empty to auto-generate a lobby ID
                     </Text>
                     <TextInput
                         style={{
@@ -36,7 +36,7 @@ const LobbyHost = ({hostRoom}) => {
                             color: 'white',
                             padding: 8,
                         }}
-                        placeholder="Room"
+                        placeholder="Lobby ID (custom)"
                         placeholderTextColor="gray"
                         onChangeText={(text) => setRoom(text)}
                     />

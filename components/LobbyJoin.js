@@ -32,7 +32,7 @@ const LobbyJoin = ({joinRoom}) => {
                         color: 'white',
                         padding: 8,
                     }}
-                    placeholder="Room"
+                    placeholder="Lobby ID"
                     placeholderTextColor="gray"
                     onChangeText={(text) => setRoom(text)}
                 />
